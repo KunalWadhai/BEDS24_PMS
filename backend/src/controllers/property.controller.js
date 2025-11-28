@@ -18,16 +18,16 @@ import {propertyService} from '../services/property.service.js';
 
 export const createProperty = async (req, res) => {
     try{
-        let {name, propertyType, currency, address, city, state, country, postcode, mobile} = req.body;
+        // let {name, propertyType, currency, address, city, state, country, postcode, mobile} = req.body;
         
-        if(!name || !propertyType ||  !currency|| !address ||
-           !city || !state ||  !country|| !postcode || !mobile){
-           return res.status(400).json({
-             success: false,
-             error: "All fields are mandatory",
-             fields : ['name', 'propertyType', 'currency', 'address', 'city', 'state', 'country', 'postcode', 'mobile'],
-           });
-        }
+        // if(!name || !propertyType ||  !currency|| !address ||
+        //    !city || !state ||  !country|| !postcode || !mobile){
+        //    return res.status(400).json({
+        //      success: false,
+        //      error: "All fields are mandatory",
+        //      fields : ['name', 'propertyType', 'currency', 'address', 'city', 'state', 'country', 'postcode', 'mobile'],
+        //    });
+        // }
 
         
         const property = await propertyService.createProperty(req.body);
@@ -65,5 +65,9 @@ export const getProperty = async (req, res) => {
         });
     }catch(err){
         console.log("Error fetching propery details", err.message);
+        return res.status(err.status || 500).json({
+            success: false,
+            error: err.message || "Internal server error"
+        });
     }
 }

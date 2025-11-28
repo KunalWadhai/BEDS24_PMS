@@ -2,7 +2,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const BEDS24_KEYS = {
-    BEDS24_API_KEY:process.env.BEDS24_API_KEY,
-    BEDS24_PROP_KEY:process.env.BEDS24_PROP_KEY,
+    BEDS24_TOKEN:process.env.BEDS24_TOKEN,
     BEDS24_BASE_URL:process.env.BEDS24_BASE_URL,
 }

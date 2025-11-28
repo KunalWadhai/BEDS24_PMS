@@ -1,30 +1,11 @@
 import axios from 'axios';
 import {BEDS24_KEYS} from '../config/beds24.config.js';
 
-/**
- curl -X 'POST' \
-'https://beds24.com/api/v2/properties' \
--H 'accept: application/json' \
--H 'token: beds24JXq4iO5fnQNmzpIkqDTXzIsabie8gUNO' \
--H 'Content-Type: application/json' \
--d '[
-{
-"name": "My New Property",
-"propertyType": "apartment",
-"currency": "USD",
-"address": "123 Main St",
-"city": "Melbourne",
-"state": "Victoria",
-"country": "Australia",
-"postcode": "3000",
-"mobile": "123456789"
-}
-]'
- */
+
 class PropertyService {
   async createProperty(propertyData) {
     try{
-          const payload = {
+        const payload = [{
           name: propertyData.name,
           propertyType: propertyData.propertyType,
           address: propertyData.address,
@@ -33,15 +14,15 @@ class PropertyService {
           country: propertyData.country,
           postcode: propertyData.postcode,
           mobile: propertyData.mobile,
-          currency: propertyData.currency || 'INR',
-        };
+          currency: propertyData.currency,
+        }];
 
         const response = await axios.post(
           `${BEDS24_KEYS.BEDS24_BASE_URL}/properties`,
           payload,
           {
             headers: {
-              'token': BEDS24_KEYS.BEDS24_API_KEY,
+              'token': BEDS24_KEYS.BEDS24_TOKEN,
               'Content-Type': 'application/json'
             }
           }
@@ -75,7 +56,7 @@ class PropertyService {
       const response = await axios.get(
         `${BEDS24_KEYS.BEDS24_BASE_URL}/properties/${propertyId}`,
         {
-          headers: { 'token': BEDS24_KEYS.BEDS24_API_KEY }
+          headers: { 'token': BEDS24_KEYS.BEDS24_TOKEN }
         }
       );
       return response.data;
