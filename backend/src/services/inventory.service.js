@@ -4,7 +4,7 @@ class InventoryService {
   async setInventoryItems(items = []) {
     try {
       // items: [{ roomTypeId: 11, from: '2025-12-01', to: '2025-12-31', quantity: 5 }]
-      const res = await client.post('/inventory', items);
+      const res = await client.post('/inventory/rooms/calendar', items);
       return res.data;
     } catch (err) {
       throw wrapAxiosError(err);
@@ -16,10 +16,10 @@ class InventoryService {
       const body = {
         propertyId: Number(propertyId),
         roomTypeIds: roomTypeIds.map(id => Number(id)),
-        from,
+        from, 
         to
       };
-      const res = await client.post('/availability', body);
+      const res = await client.get('/inventory/rooms/availability', body);
       return res.data;
     } catch (err) {
       throw wrapAxiosError(err);

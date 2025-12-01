@@ -8,7 +8,6 @@ import morgan from 'morgan';
 import roomRoutes from './routes/room.route.js';
 import propertyRoutes from './routes/property.route.js'
 import inventoryRoutes from './routes/inventory.routes.js';
-import bookingRoutes from './routes/booking.route.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
 
@@ -24,7 +23,6 @@ app.use(express.urlencoded({extended: true}));
 app.use('/api/v1/', propertyRoutes);
 app.use('/api/v1', roomRoutes);
 app.use('/api/v1', inventoryRoutes);
-app.use('/api/v1', bookingRoutes);
 
 // error handler
 app.use(errorHandler);
