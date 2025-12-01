@@ -9,17 +9,24 @@ import roomRoutes from './routes/room.route.js';
 import propertyRoutes from './routes/property.route.js'
 import inventoryRoutes from './routes/inventory.routes.js';
 import bookingRoutes from './routes/booking.route.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 
-// middlewares for json parsing
+
 app.use(helmet());
 app.use(compression());
 app.use(morgan("dev"));
+// middlewares for json parsing
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // APIs
 app.use('/api/v1/', propertyRoutes);
+app.use('/api/v1', roomRoutes);
+app.use('/api/v1', inventoryRoutes);
+app.use('/api/v1', bookingRoutes);
 
+// error handler
+app.use(errorHandler);
 
 export default app;

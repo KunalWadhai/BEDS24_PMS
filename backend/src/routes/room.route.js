@@ -1,10 +1,11 @@
 import express from 'express';
 const router = express.Router();
 
-import {createRoomTypes, getRoomTypes} from '../controllers/room.controller.js';
+import {addRoomTypes, addUnits, listRoomTypes} from '../controllers/room.controller.js';
 
 // Room routes
-router.post('/rooms/create-types/:propertyId', createRoomTypes);
-router.get('/rooms/:propertyId', getRoomTypes);
+router.post('/properties/:propertyId/roomtypes', addRoomTypes);
+router.post('/properties/:propertyId/roomtypes/:roomTypeId/units', addUnits);
+router.get('/properties/:propertyId/roomtypes', listRoomTypes);
 
 export default router;
