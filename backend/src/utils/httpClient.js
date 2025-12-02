@@ -4,7 +4,7 @@ import { BEDS24_KEYS } from '../config/beds24.config.js';
 export const client = axios.create({
   baseURL: BEDS24_KEYS.BEDS24_BASE_URL,
   headers: {
-    token: BEDS24_KEYS.BEDS24_TOKEN,
+     Token : BEDS24_KEYS.BEDS24_TOKEN,
     'Content-Type': 'application/json'
   },
   timeout: 20000

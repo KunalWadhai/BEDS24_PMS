@@ -24,7 +24,7 @@ class PropertyService {
 
   async getProperty(propertyId) {
     try {
-      const res = await client.get(`/properties/${propertyId}?includeAllRooms=true`);
+      const res = await client.get('/properties', { params: { id: propertyId, includeAllRooms: true } });
       return res.data;
     } catch (err) {
       throw wrapAxiosError(err);
