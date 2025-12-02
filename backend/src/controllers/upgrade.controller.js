@@ -1,6 +1,8 @@
 import { bookingService } from '../services/booking.service.js';
 import { inventoryService } from '../services/inventory.service.js';
+import { getCachedData, setCachedData } from '../utils/redisClientUtility.js';
 
+const cache_ttl = 300;
 // POST /api/properties/:propertyId/check-next-day-upgrades
 export const checkNextDayUpgrades = async (req, res) => {
   try {
@@ -10,8 +12,17 @@ export const checkNextDayUpgrades = async (req, res) => {
     const { date: requestedDate, fallbackOrder } = req.body ?? {};
     const dateToCheck = requestedDate || nextDayISO();
 
-    // Step 1: fetch bookings arriving on dateToCheck
-    const bookings = await bookingService.getBookingsForProperty(propertyId, dateToCheck);
+    // bookings cache keys
+    const bookingCacheKey = `beds24:booking:${propertyId}:${dateToCheck}`;
+    
+    let bookings = await getCachedData(bookingCacheKey);
+    if(!bookings){
+        // Step 1: fetch bookings arriving on dateToCheck
+       bookings = await bookingService.getBookingsForProperty(propertyId, dateToCheck);
+       await setCachedData(bookingCacheKey, bookings, cache_ttl);
+    }
+   
+
     console.log("Bookings :", bookings);
     if (!bookings?.length) return res.json({ success: true, date: dateToCheck, results: [] });
 
@@ -19,7 +30,17 @@ export const checkNextDayUpgrades = async (req, res) => {
     const maxDeparture = bookings.reduce((acc, b) => (b.departure > acc ? b.departure : acc), bookings[0].departure);
     const endDate = lastNightISO(maxDeparture);
 
-    const availResponse = await inventoryService.getRoomsAvailability(propertyId, dateToCheck, endDate);
+    // availability Cache Key
+    const availabilityCacheKey = `beds24:availability:${propertyId}:${dateToCheck}:${endDate}`;
+    
+    let availResponse = getCachedData(availabilityCacheKey);
+    if(!availResponse){
+      availResponse = await inventoryService.getRoomsAvailability(propertyId, dateToCheck, endDate);
+      await setCachedData(availabilityCacheKey, availResponse, cache_ttl);
+    }else{
+      console.log(`Loaded availability from cache (${availabilityCacheKey})`);
+    }
+    
     const availDataArray = availResponse?.data ?? availResponse;
 
     // Build maps for roomId -> typeName and typeName -> [roomIds]
