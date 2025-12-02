@@ -2,7 +2,7 @@ import { bookingService } from '../services/booking.service.js';
 import { roomService } from '../services/room.service.js';
 import { inventoryService } from '../services/inventory.service.js';
 
-// POST /api/properties/:propertyId/check-next-day-upgrades
+// POST /api/properties/:propertyId/check-next-day-arrival-bookings
 export const checkNextDayUpgrades = async (req, res) => {
   try {
     const { propertyId } = req.params;
@@ -16,6 +16,7 @@ export const checkNextDayUpgrades = async (req, res) => {
 
     // Step 1: fetch bookings arriving on dateToCheck
     const bookings = await bookingService.getBookingsForProperty(propertyId, dateToCheck);
+    console.log("Bookings : ", bookings);
 
     // if no bookings, return empty quickly
     if (!bookings || bookings.length === 0) {
@@ -24,7 +25,7 @@ export const checkNextDayUpgrades = async (req, res) => {
 
     // Step 2: fetch all roomTypes once
     const allRoomTypes = await roomService.getRoomTypes(propertyId);
-
+    console.log("All Room Types ,", allRoomTypes);
     // Step 3: For all bookings, we will check upgrades.
     // Collect candidate roomIds we will query availability for to reduce calls (optional optimization).
     // But since we need to check per-booking order, we'll call inventory per group of candidate roomIds per property/date range.
@@ -43,14 +44,16 @@ export const checkNextDayUpgrades = async (req, res) => {
 
     // Pre-fetch availability for entire date range once (the API returns all room entries)
     const availResponse = await inventoryService.getRoomsAvailability(propertyId, startDate, endDate);
+    console.log("Rooms Availability , ", availResponse);
     // availResponse.data is the array (per your example)
     const availDataArray = availResponse?.data ?? availResponse; // be defensive
 
     for (const booking of bookings) {
       const b = booking;
       const curRoomId = b.roomId;
+      console.log("Current Room ID : ", curRoomId);
       const currentRoom = await roomService.findRoomTypeByRoomId(propertyId, curRoomId);
-
+      console.log("Current Room Type : ", currentRoom);
       // if not found in roomTypes, still proceed with name from bookings
       const currentRoomObj = {
         roomId: curRoomId,
@@ -63,6 +66,7 @@ export const checkNextDayUpgrades = async (req, res) => {
         allRoomTypes,
         fallbackOrder
       );
+      console.log("Better Room : ", betterCandidates);
 
       let upgrade = null;
 
@@ -80,6 +84,7 @@ export const checkNextDayUpgrades = async (req, res) => {
 
       results.push({
         bookingId: b.id,
+        candidateName: (b.title+"."+ " " + b.firstName + " " + b.lastName),
         arrival: b.arrival,
         departure: b.departure,
         currentRoom: currentRoomObj,
