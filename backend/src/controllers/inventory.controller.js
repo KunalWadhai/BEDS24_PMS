@@ -39,7 +39,7 @@ export const findBestRoom = async (req, res, next) => {
       const rt = byName[typeName.toLowerCase()];
       if (!rt) continue;
 
-      const avail = await inventoryService.checkAvailability(propertyId, [rt.id], from, to);
+      const avail = await inventoryService.checkRoomAvailability(propertyId, [rt.id], from, to);
       const ok = evaluateAvailabilityResponse(avail, rt.id);
       if (ok) {
         return res.json({
