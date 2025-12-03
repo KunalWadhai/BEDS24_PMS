@@ -33,7 +33,7 @@ export const checkNextDayUpgrades = async (req, res) => {
     // availability Cache Key
     const availabilityCacheKey = `beds24:availability:${propertyId}:${dateToCheck}:${endDate}`;
     
-    let availResponse = getCachedData(availabilityCacheKey);
+    let availResponse = await getCachedData(availabilityCacheKey);
     if(!availResponse){
       availResponse = await inventoryService.getRoomsAvailability(propertyId, dateToCheck, endDate);
       await setCachedData(availabilityCacheKey, availResponse, cache_ttl);
