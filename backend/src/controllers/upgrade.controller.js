@@ -23,7 +23,6 @@ export const checkNextDayUpgrades = async (req, res) => {
     }
    
 
-    console.log("Bookings :", bookings);
     if (!bookings?.length) return res.json({ success: true, date: dateToCheck, results: [] });
 
     // Step 2: fetch availability for entire date range (arrival -> last night of longest booking)

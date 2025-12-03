@@ -27,13 +27,3 @@ export const addUnits = async (req, res, next) => {
     next(err);
   }
 };
-
-export const listRoomTypes = async (req, res, next) => {
-  try {
-    const { propertyId } = req.params;
-    const list = await roomService.getRoomTypes(propertyId);
-    res.json({ success: true, data: list });
-  } catch (err) {
-    next(err);
-  }
-};

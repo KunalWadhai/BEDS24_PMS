@@ -1,4 +1,4 @@
-// src/services/room.service.js
+
 import { client, wrapAxiosError } from '../utils/httpClient.js';
 import { propertyService } from './property.service.js';
 
@@ -75,20 +75,6 @@ class RoomService {
     }
   }
 
-  /**
-   * Fetch roomTypes for a property.
-   * Be defensive about response shape: Beds24 may return { data: {...} } or property object.
-   */
-  async getRoomTypes(propertyId) {
-    try {
-      const prop = await propertyService.getProperty(propertyId);
-      // typical shapes: prop.roomTypes || prop.data.roomTypes || prop.rooms
-      const roomTypes = prop?.roomTypes ?? prop?.data?.roomTypes ?? prop?.rooms ?? [];
-      return Array.isArray(roomTypes) ? roomTypes : [];
-    } catch (err) {
-      throw wrapAxiosError(err);
-    }
-  }
 
   /**
    * Find a roomType by a roomId. This will:
