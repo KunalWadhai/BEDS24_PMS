@@ -2,7 +2,7 @@ import { bookingService } from '../services/booking.service.js';
 import { inventoryService } from '../services/inventory.service.js';
 import { getCachedData, setCachedData } from '../utils/redisClientUtility.js';
 
-const cache_ttl = 300;
+const cache_ttl = 150;
 // POST /api/properties/:propertyId/check-next-day-upgrades
 export const checkNextDayUpgrades = async (req, res) => {
   try {

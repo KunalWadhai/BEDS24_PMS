@@ -1,6 +1,6 @@
 import redisClient from "../config/redis.config.js";
 
-const default_ttl = 300;
+const default_ttl = 150;
 
 export const getCachedData = async (key) => {
     try{
