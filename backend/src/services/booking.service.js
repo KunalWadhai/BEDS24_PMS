@@ -1,9 +1,6 @@
 import { client, wrapAxiosError } from '../utils/httpClient.js';
 
 class BookingService {
-  // Fetch bookings for a property, optionally filter by arrival date
-  // Uses Beds24 GET /bookings?propertyId=...&arrival=YYYY-MM-DD if available,
-  // but we also filter client-side to be safe.
   async getBookingsForProperty(propertyId, arrivalDate = null) {
     try {
       const params = new URLSearchParams({ propertyId: String(propertyId) });

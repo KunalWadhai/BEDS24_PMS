@@ -3,7 +3,6 @@ import { client, wrapAxiosError } from '../utils/httpClient.js';
 class InventoryService {
   async setInventoryItems(items = []) {
     try {
-      // items: [{ roomTypeId: 11, from: '2025-12-01', to: '2025-12-31', quantity: 5 }]
       const res = await client.post('/inventory/rooms/calendar', items);
       return res.data;
     } catch (err) {

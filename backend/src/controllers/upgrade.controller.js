@@ -3,7 +3,7 @@ import { inventoryService } from '../services/inventory.service.js';
 import { getCachedData, setCachedData } from '../utils/redisClientUtility.js';
 
 const cache_ttl = 150;
-// POST /api/properties/:propertyId/check-next-day-upgrades
+
 export const checkNextDayUpgrades = async (req, res) => {
   try {
     const { propertyId } = req.params;
@@ -12,12 +12,10 @@ export const checkNextDayUpgrades = async (req, res) => {
     const { date: requestedDate, fallbackOrder } = req.body ?? {};
     const dateToCheck = requestedDate || nextDayISO();
 
-    // bookings cache keys
     const bookingCacheKey = `beds24:booking:${propertyId}:${dateToCheck}`;
     
     let bookings = await getCachedData(bookingCacheKey);
     if(!bookings){
-        // Step 1: fetch bookings arriving on dateToCheck
        bookings = await bookingService.getBookingsForProperty(propertyId, dateToCheck);
        await setCachedData(bookingCacheKey, bookings, cache_ttl);
     }
@@ -25,11 +23,9 @@ export const checkNextDayUpgrades = async (req, res) => {
 
     if (!bookings?.length) return res.json({ success: true, date: dateToCheck, results: [] });
 
-    // Step 2: fetch availability for entire date range (arrival -> last night of longest booking)
     const maxDeparture = bookings.reduce((acc, b) => (b.departure > acc ? b.departure : acc), bookings[0].departure);
     const endDate = lastNightISO(maxDeparture);
 
-    // availability Cache Key
     const availabilityCacheKey = `beds24:availability:${propertyId}:${dateToCheck}:${endDate}`;
     
     let availResponse = await getCachedData(availabilityCacheKey);
@@ -42,7 +38,6 @@ export const checkNextDayUpgrades = async (req, res) => {
     
     const availDataArray = availResponse?.data ?? availResponse;
 
-    // Build maps for roomId -> typeName and typeName -> [roomIds]
     const roomIdToName = new Map();
     const nameToRoomIds = new Map();
     if (Array.isArray(availDataArray)) {
@@ -55,13 +50,11 @@ export const checkNextDayUpgrades = async (req, res) => {
       }
     }
 
-    // Ranking of room types (best -> worst)
     const rankingNames = buildRanking(fallbackOrder, nameToRoomIds);
 
-    // Helper to get one-level-up room type name
     function getImmediateHigherName(currentName) {
       const idx = rankingNames.findIndex(n => n.toLowerCase() === String(currentName || '').toLowerCase());
-      if (idx <= 0) return null; // top or not found
+      if (idx <= 0) return null; 
       return rankingNames[idx - 1];
     }
 
@@ -78,7 +71,6 @@ export const checkNextDayUpgrades = async (req, res) => {
       if (immediateHigherName && nameToRoomIds.has(immediateHigherName)) {
         const candidateRoomIds = nameToRoomIds.get(immediateHigherName);
 
-        // Check each candidate room for availability over this booking's nights
         const bookingEndDate = lastNightISO(b.departure);
         for (const candidateRoomId of candidateRoomIds) {
           const isAvailable = inventoryService.isRoomIdAvailableInResponse(availDataArray, candidateRoomId);
@@ -95,7 +87,7 @@ export const checkNextDayUpgrades = async (req, res) => {
         arrival: b.arrival,
         departure: b.departure,
         currentRoom: currentRoomObj,
-        upgradeCandidate: upgrade // null if no upgrade possible
+        upgradeCandidate: upgrade 
       });
     }
 
