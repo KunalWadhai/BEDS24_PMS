@@ -125,7 +125,7 @@ function buildRanking(fallbackOrder, nameToRoomIds) {
     }
     return ordered;
   }
-
+  
   const priorityKeywords = ['suite', 'presidential', 'superior', 'deluxe', 'delux', 'premium', 'standard', 'basic', 'economy'];
   const namesPresent = Array.from(nameToRoomIds.keys());
   namesPresent.sort((a, b) => {
