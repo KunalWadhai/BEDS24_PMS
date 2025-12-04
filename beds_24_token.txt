@@ -1,6 +1,0 @@
-
-{
-  "token": "7vtwv+y1gsKzl9buXeIeDNBfgfq01centh1zE/LIqH3ygpjRcdHQtMnMkwI/txUR8zWPYZjS6mhppWW1N9XBLnERsv0Qk/VprjyMrJ+2D+gfWv4XZDazTslgnhsYRWzWdpGSjmWrW1xCPa4fBMcK7rJ5kR5dJQakpwGFPYSELKg=",
-  "expiresIn": 86400,
-  "refreshToken": "Kcj1hPpF9H4VOx5R5sIBCuE82YrC7nBIbo4wyKzb5U4nbPoLNWMJ4tjzaETz/ii2JeZ9DMre+Q1Kl1SuN2zSzEvgYgDnMPohaqyMWJ/aUiuZj+truKOLpCpMBWoTGtXosVWCDAiPSjs3nNDKNuv/Gb6UXihWQLA/G0HkgKr7rdo="
-}
