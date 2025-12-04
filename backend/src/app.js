@@ -26,6 +26,14 @@ app.use('/api/v1', roomRoutes);
 app.use('/api/v1', inventoryRoutes);
 app.use('/api/v1', upgradeRoomRoutes);
 
+app.get('/health', (req, res)=>{
+    return res.status(200).json({
+        success: true, 
+        Timestamp: new Date().toISOString(), 
+        uptime: process.uptime()
+    });
+});
+
 // error handler
 app.use(errorHandler);
 
