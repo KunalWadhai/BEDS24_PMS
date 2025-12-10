@@ -9,7 +9,7 @@ export const createProperty = async (req, res, next) => {
   }
 };
 
-export const getProperty = async (req, res, next) => {
+export const getPropertyInfo = async (req, res, next) => {
   try {
     const { id } = req.params;
     const prop = await propertyService.getProperty(id);
